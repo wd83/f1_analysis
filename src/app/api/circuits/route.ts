@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getCircuits } from "@/lib/f1api";
 
+export const runtime = "edge";
+
 export async function GET() {
   try {
     const circuits = await getCircuits();

@@ -72,7 +72,7 @@ export interface QualifyingResult {
 }
 
 async function fetchJson(url: string) {
-  const res = await fetch(url, { next: { revalidate: 3600 } });
+  const res = await fetch(url);
   if (!res.ok) throw new Error(`API error: ${res.status}`);
   return res.json();
 }

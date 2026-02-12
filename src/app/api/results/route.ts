@@ -6,6 +6,8 @@ import {
   addQualifyingData,
 } from "@/lib/f1api";
 
+export const runtime = "edge";
+
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const circuitId = searchParams.get("circuitId");
