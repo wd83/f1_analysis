@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { useParams } from "next/navigation";
 import YearRangeSelector from "@/components/YearRangeSelector";
 import StatsTable from "@/components/StatsTable";
@@ -9,6 +9,10 @@ import {
   ConstructorWinsChart,
   SeasonWinnersChart,
 } from "@/components/PerformanceCharts";
+
+const TelemetryTab = lazy(
+  () => import("@/components/telemetry/TelemetryTab")
+);
 
 interface DriverStats {
   driverId: string;
@@ -54,7 +58,7 @@ interface ResultsData {
   seasons: SeasonSummary[];
 }
 
-type Tab = "drivers" | "constructors" | "seasons";
+type Tab = "drivers" | "constructors" | "seasons" | "telemetry";
 
 export default function TrackClient() {
   const params = useParams();
@@ -108,6 +112,7 @@ export default function TrackClient() {
     { key: "drivers", label: "Drivers" },
     { key: "constructors", label: "Constructors" },
     { key: "seasons", label: "Season History" },
+    { key: "telemetry", label: "Telemetry" },
   ];
 
   const driverColumns = [
@@ -409,6 +414,17 @@ export default function TrackClient() {
               title="Race History"
               defaultSortKey="season"
             />
+          )}
+          {activeTab === "telemetry" && (
+            <Suspense
+              fallback={
+                <div className="flex items-center justify-center py-20">
+                  <div className="animate-spin rounded-full h-12 w-12 border-4 border-f1-red border-t-transparent" />
+                </div>
+              }
+            >
+              <TelemetryTab circuitId={circuitId} />
+            </Suspense>
           )}
         </>
       ) : null}

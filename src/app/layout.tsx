@@ -33,7 +33,7 @@ export default function RootLayout({
         </header>
         <main>{children}</main>
         <footer className="bg-f1-dark text-gray-500 text-center py-4 mt-12 text-sm">
-          Data provided by the Ergast/Jolpica F1 API
+          Data provided by the Ergast/Jolpica F1 API &amp; OpenF1 API
         </footer>
       </body>
     </html>
