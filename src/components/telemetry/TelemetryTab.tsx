@@ -10,6 +10,7 @@ import GapChart from "./GapChart";
 import TyreStrategy from "./TyreStrategy";
 import WeatherBar from "./WeatherBar";
 import LapTimesTable from "./LapTimesTable";
+import LiveDashboard from "./LiveDashboard";
 
 interface TelemetryTabProps {
   circuitId: string;
@@ -92,6 +93,9 @@ async function cachedFetch<T>(url: string): Promise<T> {
 const AVAILABLE_YEARS = [2023, 2024, 2025];
 
 export default function TelemetryTab({ circuitId }: TelemetryTabProps) {
+  // Live vs. historical mode
+  const [mode, setMode] = useState<"historical" | "live">("historical");
+
   // Selection state
   const [selectedYear, setSelectedYear] = useState(2024);
   const [meetings, setMeetings] = useState<Meeting[]>([]);
@@ -323,6 +327,41 @@ export default function TelemetryTab({ circuitId }: TelemetryTabProps) {
 
   return (
     <div className="space-y-4">
+      {/* Mode toggle: Live vs Historical */}
+      <div className="flex gap-1">
+        <button
+          onClick={() => setMode("historical")}
+          className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+            mode === "historical"
+              ? "bg-f1-dark text-white"
+              : "bg-gray-200 text-gray-600 hover:bg-gray-300"
+          }`}
+        >
+          Historical
+        </button>
+        <button
+          onClick={() => setMode("live")}
+          className={`px-3 py-1.5 rounded text-sm font-medium transition-colors flex items-center gap-1.5 ${
+            mode === "live"
+              ? "bg-f1-red text-white"
+              : "bg-gray-200 text-gray-600 hover:bg-gray-300"
+          }`}
+        >
+          <span className="relative flex h-2 w-2">
+            <span
+              className={`relative inline-flex rounded-full h-2 w-2 ${
+                mode === "live" ? "bg-white" : "bg-red-500"
+              }`}
+            />
+          </span>
+          Live
+        </button>
+      </div>
+
+      {mode === "live" && <LiveDashboard />}
+
+      {mode === "historical" && (
+        <>
       {/* Year + Meeting selector */}
       <div className="bg-white rounded-lg shadow p-4">
         <div className="flex flex-col sm:flex-row gap-4 items-start">
@@ -521,6 +560,8 @@ export default function TelemetryTab({ circuitId }: TelemetryTabProps) {
             Select a driver and lap to view telemetry data
           </div>
         )}
+        </>
+      )}
     </div>
   );
 }
